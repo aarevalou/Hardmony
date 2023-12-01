@@ -1,0 +1,68 @@
+<template>
+    <div>
+      <h2 class="pt-3 text-center">Todos los productos</h2>
+      <nav class="d-flex justify-content-center" aria-label="breadcrumb">
+        <ol class="breadcrumb">
+          <li class="breadcrumb-item">
+            <RouterLink to="/">Inicio</RouterLink>
+          </li>
+          <li class="breadcrumb-item active" aria-current="page">Productos</li>
+        </ol>
+      </nav>
+  
+      <div class="container mb-4">
+        <div class="mx-3">
+          <ProductsFilters @sort-item="sortItems" />
+        </div>
+      </div>
+    </div>
+  </template>
+  
+  <script>
+  import ProductsFilters from "../components/Products/Filters.vue";
+  
+  export default {
+    components: {
+      ProductsFilters,
+    },
+    data() {
+      return {
+        isLoading: true,
+        grid: {
+          cards: [],
+          showCards: 6,
+        },
+      };
+    },
+  };
+  </script>
+  
+  <style scoped>
+  .breadcrumb {
+    background: inherit !important;
+    color: #2c3539 !important;
+    font-size: 16px;
+  }
+  
+  .breadcrumb li {
+    text-decoration: none !important;
+    color: #f2be00 !important;
+  }
+  
+  .breadcrumb a {
+    text-decoration: none !important;
+    color: #2c3539 !important;
+  }
+  
+  .loading-message,
+  .no-data-message {
+    text-align: center;
+    padding: 20px;
+    font-size: 18px;
+  }
+  
+  .no-data-message {
+    color: #d9534f; /* Puedes ajustar el color según tus preferencias */
+  }
+  </style>
+  
