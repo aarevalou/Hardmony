@@ -4,26 +4,24 @@
       <HeaderMobileMenu />
       <div class="navbar-group">
         <span class="navbar-brand py-0 pl-5">
-          <img src="../assets/img/hardmony-logo.png" width="90" height="18" alt="site-logo" title="site-logo">
+          <img src="../assets/img/hardmony.png" width="90" height="18" alt="site-logo" title="site-logo">
         </span>
         <div class="d-flex justify-content-center align-items-center flex-grow-1">
           <HeaderNavLinks />
         </div>
       </div>
       <div class="navbar-group">
-        <div class="searc d-none d-xl-block d-lg-block pr-3">
-          <input type="search" class="search">
-        </div>
+        <HeaderSearchBar />
+        <HeaderCartButton @open="cartState" />
+        &nbsp;&nbsp;
         <div class="user">
           <img data-bs-toggle="modal" data-bs-target="#userModal" width="25" height="25"
             src='../assets/img/account_circle.png' alt="gender-neutral-user"
             title="gender-neutral-user" />
-          </div>
-        <HeaderCartButton @open="cartState" />
+        </div>
       </div>
     </nav>
     <HeaderUser />
-
   </div>
 </template>
 
@@ -33,6 +31,7 @@ import HeaderMobileMenu from '../components/Header/MobileMenu.vue';
 import HeaderNavLinks from '../components/Header/NavLinks.vue';
 import HeaderCartButton from '../components/Header/CartButton.vue';
 import HeaderUser from '../components/Header/UserModal.vue';
+import HeaderSearchBar from '../components/Header/SearchBar.vue';
 import HeaderCart from '../components/Header/Cart.vue';
 
 import { ref } from 'vue';
@@ -94,23 +93,11 @@ form .btn-xl.btn-success.mt-3 {
   font-size: 20px;
   outline: none;
   cursor: pointer;
-  box-shadow: 0 26px 38px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+  box-shadow: 0 26px 38px 0 rgba(255, 255, 255, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
 }
 
 .user {
   cursor: pointer;
-}
-
-.search {
-  outline: none;
-  border: none;
-  background: url('@/assets/search.png') no-repeat 5px center;
-  background-size: 30px;
-  padding: 5px 8px 4px 26px;
-  width: 10px;
-  border-radius: 10em;
-  transition: all 0.5s;
-  margin-right: 10px;
 }
 
 .search:focus {

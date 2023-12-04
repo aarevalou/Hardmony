@@ -1,46 +1,23 @@
 <template>
   <div class="row justify-content-center text-center">
-    <RouterLink v-for="item in items" :to="`/details/${item.id}`" class="col-10 col-xl-4 col-lg-4 col-md-4 col-sm-6 col-xs-4 pb-3" :key="item.id">
+    <RouterLink v-for="item in items" :to="{ name: 'productDetails', params: { id: item.id } }" class="col-10 col-xl-4 col-lg-4 col-md-4 col-sm-6 col-xs-4 pb-3" :key="item.id">
       <div class="card">
         <img class="card-img-top" :src="item.imagen" alt="Card-image-cap" title="Card-image-cap" loading="lazy">
         <div class="card-body">
-          <h5 class="card-title no-underline">{{ item.modelo }}</h5>
-          <p class="card-text no-underline">${{ item.precio }}</p>
+          <h5 class="card-title" style="text-decoration: none;">{{ item.modelo }}</h5>
+          <p class="card-text" style="text-decoration: none;">${{ item.precio }}</p>
         </div>
       </div>
     </RouterLink>
   </div>
 </template>
 
-
 <script setup lang="ts">
-import { ref, onMounted } from 'vue';
-import axios from 'axios';
+import { ref, toRefs } from 'vue';
 
-interface Product {
-  id: number;
-  marca: string;
-  modelo: string;
-  precio: number;
-  stock: number;
-  imagen: string; 
-  categoria_id: number;
-}
-
-const sort = ref('CATEGORIAS');
-const items = ref<Product[]>([]);
-
-onMounted(async () => {
-  try {
-    const response = await axios.get('http://localhost:8080/products');
-    items.value = response.data;
-  } catch (error) {
-    console.error('Error loading data:', error);
-  }
-});
-
+const props = defineProps(['items']);
+const { items } = toRefs(props);
 </script>
-
 
 <style>
 .card {
@@ -81,10 +58,4 @@ onMounted(async () => {
   transform: scaleY(1.02) scaleX(1.02);
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.25), 0 0px 40px rgba(0, 0, 0, 0.22);
 }
-
-.card-title.no-underline,
-.card-text.no-underline {
-  text-decoration: none;
-}
-
 </style>

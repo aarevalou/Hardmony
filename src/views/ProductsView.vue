@@ -13,40 +13,77 @@
     <div class="container mb-4">
       <div class="mx-3">
         <ProductsFilters />
-        <div v-for="(product, index) in products" :key="index">
-          <p>{{ product.modelo }}</p>
-        </div>
+      </div>
+      <div class="main-grid d-flex p-3">
+      <ProductsFilterBar
+      :updateCategories="updateCategories"
+      :selectedCategories="selectedCategories"
+      :updateBrands="updateBrands"
+      :selectedBrands="selectedBrands"/>
+      <div class="col-11 col-md-12 col-lg-8 mx-auto" style="margin-left:25px !important">
+        <ProductsCard :items="slicedCards" />
+        <ProductsMoreButton @incrementCards="showMoreProducts" />
       </div>
     </div>
   </div>
+</div>
 </template>
 
 <script>
 import ProductsFilters from "../components/Products/Filters.vue";
-import axios from "axios";
+import ProductsFilterBar from "../components/Products/FilterBar.vue";
+import ProductsCard from "../components/Products/Card.vue";
+import ProductsMoreButton from "../components/Products/MoreButton.vue";
 
 export default {
   data() {
     return {
-      products: [],
+      maxVisibleProducts: 6,
     };
   },
-  // Tu componente Vue
-  async mounted() {
-    try {
-      console.log("Haciendo solicitud a /api/products");
-      const response = await axios.get("http://localhost:8080/products"); // Cambia la URL a /api/products
-      console.log("Respuesta recibida:", response);
-      if (response.data && response.data.length > 0) {
-        this.products = response.data;
-      }
-    } catch (error) {
-      console.error("Error al obtener la información de los productos:", error);
-    }
+  computed: {
+    products() {
+      return this.$store.state.products;
+    },
+    slicedCards() {
+      return this.products.slice(0, this.maxVisibleProducts);
+    },
+    selectedCategories() {
+    return this.$store.state.selectedCategories;
+    },
+    selectedBrands() { 
+      return this.$store.state.selectedBrands;
+    },
   },
+  mounted() {
+    this.$store.dispatch('fetchProducts');
+  },
+  methods: {
+    showMoreProducts() {
+      this.maxVisibleProducts += 6;
+    },
 
+    updateCategories(newCategories) {
+      console.log('Category ID:', newCategories[0]);
+      this.$store.commit('setSelectedCategories', newCategories);
+      if (newCategories.length > 0) {
+        this.$store.dispatch('fetchProductsByCategory', newCategories[0]);
+      } else {
+        this.$store.dispatch('fetchProducts');
+      }
+    },
+
+    updateBrands(newBrands) {
+      console.log('Branch ID:', newBrands[0]); 
+      this.$store.commit('setSelectedBrands', newBrands);
+      this.$store.dispatch('fetchCategories');
+    },
+  },
   components: {
     ProductsFilters,
+    ProductsFilterBar,
+    ProductsCard,
+    ProductsMoreButton,
   },
 };
 </script>
@@ -76,6 +113,6 @@ export default {
 }
 
 .no-data-message {
-  color: #d9534f; /* Puedes ajustar el color según tus preferencias */
+  color: #d9534f;
 }
 </style>

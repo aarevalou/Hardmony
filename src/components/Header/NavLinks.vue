@@ -5,7 +5,7 @@
       v-for="(link, idx) in navLinks"
       :id="idx"
       class="mx-2"
-      :style="{ color: textColor }"
+      :style="{ color: textColor, textDecoration: 'none' }"
     >
       {{ link.name }}
     </RouterLink>
@@ -30,3 +30,9 @@ const navLinks = [
   }
 ];
 </script>
+
+<style scoped>
+.router-link-exact-active {
+  text-decoration: none;
+}
+</style>
