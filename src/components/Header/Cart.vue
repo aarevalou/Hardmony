@@ -5,26 +5,38 @@
         <p class="text-center mt-4 pb-2 h3">Cart</p>
         <hr>
         <div v-if="!store.itemsNumber" class="d-flex align-items-center justify-content-center text-center font-italic">
-          El carrito está vacio.
+          Tu carrito está vacio, intenta agregar algo
         </div>
         <div class="row" v-for="item in store.cartItems" :key="item.id">
           <CartItem :item="item" />
         </div>
         <div v-if="store.itemsNumber">
           <hr>
+          <CartTotal />
         </div>
       </div>
     </div>
-    <div :class="['modal', isOpen ? '' : 'off']" @click="$emit('closeCart')"></div>
+    <div :class="['modal', isOpen ? '' : 'off']" @click="closeCart"></div>
   </div>
 </template>
 
-<script setup>
-import CartItem from '../Cart/Item.vue';
 
-const store = useMainStore();
-const { isOpen } = defineProps(['isOpen']);
+<script setup>
+import CartItem from '../Header/Cart.vue';
+import CartTotal from '../Cart/Total.vue';
+import { ref } from 'vue';
+import { useStore } from 'vuex';
+
+const store = useStore();
+const isOpen = ref(false);
+
+const closeCart = () => {
+  store.commit('toggleCart');
+  isOpen.value = false;
+};
+
 </script>
+
 
 
 <style scoped>

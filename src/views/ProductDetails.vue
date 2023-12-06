@@ -31,23 +31,37 @@ export default {
   computed: {
     ...mapGetters(["visibleProducts"]),
     productDetails() {
-        const productId = this.$route.params.id;
-        return this.$store.state.products.find(product => String(product.id) === String(productId)) || {};
+      const productId = this.$route.params.id;
+      const details =
+        this.$store.state.products.find(
+          (product) => String(product.id) === String(productId)
+        ) || {};
+      console.log("productDetails:", details);
+      return details;
     },
     relatedItems() {
       const productId = this.$route.params.id;
-      const startIndex = this.$store.state.products.findIndex(
-        (product) => product.id === productId
+      const currentProduct = this.$store.state.products.find(
+        (product) => String(product.id) === String(productId)
       );
 
-      return this.$store.state.products
-        .slice(startIndex + 1, startIndex + 4)
-        .map((product) => ({
-          id: product.id,
-          imagen: product.imagen || "",
-          modelo: product.modelo || "Producto",
-          precio: product.precio || "0",
-        }));
+      if (currentProduct && currentProduct.categoria_id) {
+        return this.$store.state.products
+          .filter(
+            (product) =>
+              product.categoria_id === currentProduct.categoria_id &&
+              product.id !== currentProduct.id
+          )
+          .slice(0, 3)
+          .map((product) => ({
+            id: product.id,
+            imagen: product.imagen || "",
+            modelo: product.modelo || "Producto",
+            precio: product.precio || "0",
+          }));
+      } else {
+        return [];
+      }
     },
   },
   components: {

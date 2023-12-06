@@ -30,11 +30,11 @@
 </template>
 
 <script setup>
-import { ref } from "vue";
+import { ref, defineProps } from 'vue';
+import { useStore } from 'vuex';
 
-const props = defineProps({
-  item: Object,
-});
+const props = defineProps(['item']);
+const store = useStore();
 
 const quantity = ref(1);
 
@@ -42,8 +42,19 @@ const increment = () => (quantity.value < 9 ? quantity.value++ : 0);
 const decrement = () => (quantity.value > 1 ? quantity.value-- : 0);
 
 const addToCart = () => {
-  // Implementa la lógica para agregar al carrito aquí
-  console.log(`Agregando ${quantity.value} elementos al carrito:`, item);
+  const productToAdd = {
+    id: props.item.id,
+    name: props.item.modelo,
+    quantity: quantity.value,
+    price: props.item.precio,
+  };
+
+  store.dispatch('addToCart', productToAdd);
+
+  // También puedes emitir un evento para cerrar el modal o realizar otras acciones necesarias
+  // $emit('closeModal');
+
+  console.log(`Agregando ${quantity.value} elementos al carrito:`, productToAdd);
 };
 
 const formatPrice = (price) => {

@@ -1,11 +1,22 @@
 <template>
-  <div class="bag">
-    <img data-bs-toggle="modal" width="25" height="25" src='../../assets/img/shopping_cart.png' alt="move-by-trolley" title="cart-trolley" />
-  </div>
+  <div class="bag" @click="openCart">
+  <img data-bs-toggle="modal" width="25" height="25" src='../../assets/img/shopping_cart.png' alt="move-by-trolley" title="cart-trolley" />
+  <span class="mb-3" v-if="store.itemsNumber">{{ store.itemsNumber }}</span>
+</div>
 </template>
 
-<script setup lang="ts">
+<script setup>
+import { ref } from 'vue';
+import { useStore } from 'vuex';
+
+const store = useStore();
+
+const openCart = () => {
+  store.commit('toggleCart');
+};
 </script>
+
+
 
 <style scoped>
 .bag {

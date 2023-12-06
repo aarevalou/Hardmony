@@ -15,18 +15,24 @@
         <ProductsFilters />
       </div>
       <div class="main-grid d-flex p-3">
-      <ProductsFilterBar
+        <ProductsFilterBar
       :updateCategories="updateCategories"
       :selectedCategories="selectedCategories"
       :updateBrands="updateBrands"
-      :selectedBrands="selectedBrands"/>
-      <div class="col-11 col-md-12 col-lg-8 mx-auto" style="margin-left:25px !important">
-        <ProductsCard :items="slicedCards" />
-        <ProductsMoreButton @incrementCards="showMoreProducts" />
+      :selectedBrands="selectedBrands"
+      @updateCategories="updateCategories"
+      @updateBrands="updateBrands"
+      @updatePrice="updatePrice"
+      :minPrice="minPrice"
+      :maxPrice="maxPrice"
+    />
+        <div class="col-11 col-md-12 col-lg-8 mx-auto" style="margin-left:25px !important">
+          <ProductsCard :items="slicedCards" />
+          <ProductsMoreButton @incrementCards="showMoreProducts" />
+        </div>
       </div>
     </div>
   </div>
-</div>
 </template>
 
 <script>
@@ -39,19 +45,21 @@ export default {
   data() {
     return {
       maxVisibleProducts: 6,
+      minPrice: 0,
+      maxPrice: 100000,
     };
   },
   computed: {
     products() {
-      return this.$store.state.products;
+      return this.$store.getters.visibleProducts;
     },
     slicedCards() {
       return this.products.slice(0, this.maxVisibleProducts);
     },
     selectedCategories() {
-    return this.$store.state.selectedCategories;
+      return this.$store.state.selectedCategories;
     },
-    selectedBrands() { 
+    selectedBrands() {
       return this.$store.state.selectedBrands;
     },
   },
@@ -73,8 +81,14 @@ export default {
       }
     },
 
+    updatePrice({ min, max }) {
+      this.minPrice = min;
+      this.maxPrice = max;
+      this.$store.dispatch('fetchProductsByPrice', { min, max });
+    },
+
     updateBrands(newBrands) {
-      console.log('Branch ID:', newBrands[0]); 
+      console.log('Brand ID:', newBrands[0]);
       this.$store.commit('setSelectedBrands', newBrands);
       this.$store.dispatch('fetchCategories');
     },

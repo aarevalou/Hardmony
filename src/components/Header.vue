@@ -22,6 +22,7 @@
       </div>
     </nav>
     <HeaderUser />
+    <HeaderCart :is-open="cart" @closeCart="cartState" />
   </div>
 </template>
 
@@ -35,9 +36,10 @@ import HeaderSearchBar from '../components/Header/SearchBar.vue';
 import HeaderCart from '../components/Header/Cart.vue';
 
 import { ref } from 'vue';
-const cart = ref(false)
 
-const cartState = () => cart.value = !cart.value;
+const cartIsOpen = ref(false);
+
+const cartState = () => cartIsOpen.value = !cartIsOpen.value;
 
 </script>
 
