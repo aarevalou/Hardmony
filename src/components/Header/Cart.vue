@@ -1,30 +1,27 @@
 <template>
   <div>
-    <div :class="['cart', isOpen ? 'on' : '']">
+    <div :class="['cart', store.state.cartIsOpen ? 'on' : '']">
       <div class="cart-menu">
-        <p class="text-center mt-4 pb-2 h3">Cart</p>
-        <hr>
-        <div v-if="!store.itemsNumber" class="d-flex align-items-center justify-content-center text-center font-italic">
-          Tu carrito está vacio, intenta agregar algo
+        <p class="text-center mt-4 pb-2 h3">Carrito</p>
+        <hr />
+        <div v-if="!store.state.itemsNumber" class="empty-cart-message">
+          Tu carrito está vacío, intenta agregar algo.
         </div>
-        <div class="row" v-for="item in store.cartItems" :key="item.id">
-          <CartItem :item="item" />
-        </div>
-        <div v-if="store.itemsNumber">
-          <hr>
+        <CartItem v-for="item in cartItems" :key="item.id" :item="item" />
+        <div v-if="store.state.itemsNumber" class="cart-total">
+          <hr />
           <CartTotal />
         </div>
       </div>
     </div>
-    <div :class="['modal', isOpen ? '' : 'off']" @click="closeCart"></div>
+    <div :class="['overlay', store.state.cartIsOpen ? '' : 'off']" @click="closeCart"></div>
   </div>
 </template>
 
-
 <script setup>
-import CartItem from '../Header/Cart.vue';
+import CartItem from '../Cart/Item.vue';
 import CartTotal from '../Cart/Total.vue';
-import { ref } from 'vue';
+import { ref, computed } from 'vue';
 import { useStore } from 'vuex';
 
 const store = useStore();
@@ -32,15 +29,47 @@ const isOpen = ref(false);
 
 const closeCart = () => {
   store.commit('toggleCart');
-  isOpen.value = false;
 };
 
+const cartItems = computed(() => store.state.cartItems);
 </script>
 
 
-
 <style scoped>
-.modal {
+.cart {
+  position: fixed;
+  margin-right: 0px;
+  top: 0;
+  right: 0;
+  width: 400px;
+  height: 100%;
+  background: #2f3b3f;
+  overflow-y: auto;
+  z-index: 1051;
+  transform: translateX(400px);
+  transition: transform 0.4s;
+}
+
+.cart.on {
+  transform: translateX(0);
+}
+
+.cart-menu {
+  color: #eee;
+  margin-left:20px;
+}
+
+.empty-cart-message {
+  text-align: center;
+  margin: 20px;
+  font-style: italic;
+}
+
+.cart-total {
+  margin-top: 20px;
+}
+
+.overlay {
   display: block;
   z-index: 1050;
   position: fixed;
@@ -48,61 +77,10 @@ const closeCart = () => {
   left: 0;
   width: 100%;
   height: 100%;
-  overflow: auto;
-
-  background-color: rgb(0, 0, 0);
   background-color: rgba(0, 0, 0, 0.4);
 }
 
-.modal.off {
+.overlay.off {
   display: none;
-}
-
-.fade-enter-active,
-.fade-leave-active {
-  transition: opacity .5s;
-}
-
-.fade-enter,
-.fade-leave-to {
-  opacity: 0;
-}
-
-.cart {
-  position: fixed;
-  margin-right: 0px;
-  top: 0;
-  right: 0;
-  width: 360px;
-  height: 100%;
-  background: #303e49;
-  overflow-y: auto;
-  z-index: 1051;
-  -webkit-overflow-scrolling: touch;
-  transform: translateX(360px);
-  transition-property: transform;
-  transition-duration: 0.4s;
-}
-
-.cart.on {
-  transform: translateX(0);
-  -webkit-overflow-scrolling: touch;
-  transition-property: transform;
-  transition-duration: 0.4s;
-}
-
-.cart-menu {
-  color: #eee;
-  margin-left: 10px;
-  margin-right: 15px;
-}
-
-hr {
-  border-color: white;
-}
-
-.row {
-  margin-top: 10px;
-  margin-bottom: 10px;
 }
 </style>

@@ -22,7 +22,7 @@
       </div>
     </nav>
     <HeaderUser />
-    <HeaderCart :is-open="cart" @closeCart="cartState" />
+    <HeaderCart :is-open="cartIsOpen" @closeCart="cartState" />
   </div>
 </template>
 
@@ -36,10 +36,14 @@ import HeaderSearchBar from '../components/Header/SearchBar.vue';
 import HeaderCart from '../components/Header/Cart.vue';
 
 import { ref } from 'vue';
+import { useStore } from 'vuex';
 
+const store = useStore();
 const cartIsOpen = ref(false);
 
-const cartState = () => cartIsOpen.value = !cartIsOpen.value;
+const cartState = () => {
+  store.commit('toggleCart');
+};
 
 </script>
 

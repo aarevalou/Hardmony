@@ -4,9 +4,7 @@
       <div class="col6 col-xl-6 col-lg-6 col-md-12 col-sm-12">
         <img class="img-fluid" :src="item && item.imagen ? item.imagen : ''" />
       </div>
-
-      <div
-        class="col6 col-xl-6 col-lg-6 col-md-12 col-sm-12 d-flex align-items-center justify-content-start">
+      <div class="col6 col-xl-6 col-lg-6 col-md-12 col-sm-12 d-flex align-items-center justify-content-start">
         <div class="info pt-xl-0 pt-lg-0 pt-5">
           <span class="float-left pr-3">★★★★★</span>
           <h6 style="width: 190px">1 reseñas</h6>
@@ -44,15 +42,13 @@ const decrement = () => (quantity.value > 1 ? quantity.value-- : 0);
 const addToCart = () => {
   const productToAdd = {
     id: props.item.id,
-    name: props.item.modelo,
+    title: props.item.modelo,
     quantity: quantity.value,
     price: props.item.precio,
+    img: props.item.imagen,
   };
 
-  store.dispatch('addToCart', productToAdd);
-
-  // También puedes emitir un evento para cerrar el modal o realizar otras acciones necesarias
-  // $emit('closeModal');
+  store.commit('addToCart', productToAdd);
 
   console.log(`Agregando ${quantity.value} elementos al carrito:`, productToAdd);
 };

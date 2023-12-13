@@ -2,6 +2,8 @@
 import { createStore } from 'vuex';
 import axios from 'axios';
 
+const ip = '192.168.1.10';
+
 export default createStore({
   state: {
     products: [],
@@ -12,7 +14,9 @@ export default createStore({
     selectedBrands: [],
     maxVisibleProducts: 6,
     cartItems: [],
-    isCartOpen: false,
+    cartIsOpen: false,
+    itemsNumber: 0, 
+    totalPrice: 0,
   },
   mutations: {
     setProducts(state, products) {
@@ -33,23 +37,45 @@ export default createStore({
     setProductBrands(state, productBrands) {
       state.productBrands = productBrands;
     },
-    addToCart(state, product) {
-      state.cartItems.push(product);
-    },
     removeFromCart(state, productId) {
       state.cartItems = state.cartItems.filter(item => item.id !== productId);
+      state.itemsNumber = state.cartItems.length;
     },
     clearCart(state) {
       state.cartItems = [];
+      state.itemsNumber = 0;
     },
     toggleCart(state) {
-      state.isCartOpen = !state.isCartOpen;
+      state.cartIsOpen = !state.cartIsOpen;
     },
+
+    addToCart(state, item) {
+      const existingItem = state.cartItems.find((cartItem) => cartItem.id === item.id);
+    
+      if (existingItem) {
+        existingItem.quantity += item.quantity;
+      } else {
+        state.cartItems.push({
+          id: item.id,
+          title: item.title,
+          price: item.price,
+          img: item.img,
+          marca: item.marca, // Asegúrate de incluir la marca
+          modelo: item.modelo, // Asegúrate de incluir el modelo
+          quantity: item.quantity,
+          subtotal: item.price * item.quantity, // Calcula el subtotal aquí
+        });
+      }
+    
+      state.itemsNumber += item.quantity;
+      state.totalPrice += item.price * item.quantity;
+    },
+  
   },
   actions: {
     async fetchProducts({ commit }) {
       try {
-        const response = await axios.get('http://192.168.1.10:8080/products');
+        const response = await axios.get(`http://${ip}:8080/products`);
         if (response.data && response.data.length > 0) {
           commit('setProducts', response.data);
         }
@@ -59,7 +85,7 @@ export default createStore({
     },
     async fetchProductsByCategory({ commit }, categoryId) {
       try {
-        const response = await axios.get(`http://192.168.1.10:8080/products/category/${categoryId}`);
+        const response = await axios.get(`http://${ip}:8080/products/category/${categoryId}`);
         if (response.data && response.data.length > 0) {
           commit('setProducts', response.data);
         }
@@ -69,7 +95,7 @@ export default createStore({
     },
     async fetchCategories({ commit }) {
       try {
-        const response = await axios.get('http://192.168.1.10:8080/products/categories');
+        const response = await axios.get(`http://${ip}:8080/products/categories`);
         if (response.data && response.data.length > 0) {
           commit('setCategories', response.data);
         }
@@ -79,7 +105,7 @@ export default createStore({
     },
     async fetchBrands({ commit }) {
       try {
-        const response = await axios.get('http://192.168.1.10:8080/products/brands');
+        const response = await axios.get(`http://${ip}:8080/products/brands`);
         if (response.data && response.data.length > 0) {
           commit('setBrands', response.data);
         }
@@ -89,7 +115,7 @@ export default createStore({
     },
     async fetchProductsByBrand({ commit }, brandId) {
       try {
-        const response = await axios.get(`http://192.168.1.:8080/products/brand/${brandId}`);
+        const response = await axios.get(`http://${ip}:8080/products/brand/${brandId}`);
         if (response.data && response.data.length > 0) {
           commit('setProducts', response.data);
         }
@@ -99,7 +125,7 @@ export default createStore({
     },
     async fetchProductsByPrice({ commit }, { min, max }) {
       try {
-        const response = await axios.get(`http://localhost:8080/products/price?min=${min}&max=${max}`);
+        const response = await axios.get(`http://${ip}:8080/products/price?min=${min}&max=${max}`);
         if (response.data && response.data.length > 0) {
           commit('setProducts', response.data);
         }
@@ -109,8 +135,8 @@ export default createStore({
     },
     async fetchProductsWithBrands({ commit }) {
       try {
-        const productsResponse = await axios.get('http://192.168.1.10:8080/products');
-        const brandsResponse = await axios.get('http://192.168.1.10:8080/products/brands');
+        const productsResponse = await axios.get(`http://${ip}:8080/products`);
+        const brandsResponse = await axios.get(`http://${ip}:8080/products/brands`);
         
         if (productsResponse.data && productsResponse.data.length > 0 && brandsResponse.data) {
           commit('setProducts', productsResponse.data);

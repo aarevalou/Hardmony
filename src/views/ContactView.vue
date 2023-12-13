@@ -10,14 +10,18 @@
         <form>
             <div class="form-group">
             <input type="text" class="form-control" required>
-            <label class="label" for="name">Nombre</label>
+            <label class="label" for="name">Nombre completo</label>
             </div>
             <div class="form-group">
             <input type="email" class="form-control" required>
-            <label class="label" for="E-mail">E-mail</label>
-             </div>
-             <div class="form-group">
-               <textarea class="form-control" style="overflow:hidden; height:130px" rows="3" required></textarea>
+            <label class="label" for="E-mail">Dirección de E-mail</label>
+            </div>
+            <div class="form-group">
+            <input type="telefono" class="form-control" required>
+            <label class="label" for="telefono">Núemero telefónico (opcional)</label>
+            </div>
+            <div class="form-group">
+              <textarea class="form-control" style="overflow:hidden; height:130px" rows="3" required></textarea>
             <label class="label" for="Message">Mensaje</label>
            </div>
            <button class="btn btn-light" href="#" role="button">Enviar</button>
